@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationConfig>
+	<Pre_requisite name="Firmware" Dshow_Enabled="false">
+		<FirmwareVersion>1.1.390.3</FirmwareVersion>
+		<ISPVersion>2.55</ISPVersion>
+	</Pre_requisite>
+	<Pre_requisite name="Product">
+		<ModuleName Enabled="true" Port="3">e-CAM200_DiagCAM</ModuleName>
+		<SupportedVID>
+			<VID>2560</VID>
+		</SupportedVID>
+		<SupportedPID Enum_delay="1">
+			<PID>C137</PID>
+		</SupportedPID>
+	</Pre_requisite>
+	<Pre_requisite name="MCUFirmwareVersion">
+		<Hid name="MCU Firmware Version" camparetext="STURDeCAM50V130120:20FFC0XXXXXXX" Start_Index="1" End_Index="32">00,00</Hid>
+	</Pre_requisite>
+	<Pre_requisite name="SMB_CONFIG" Enabled="true">
+		<SERVER>mfgshare.e-consystems.net</SERVER>
+		<USERNAME>MetApps</USERNAME>
+		<PASSWORD>metapps@2026</PASSWORD>
+		<REMOTE_ROOT>\\mfgshare.e-consystems.net\Production\Over All Test Report\7 Temporary Testing Report\Temp e-con Systems Daily Test Report - Server\DiagCAM</REMOTE_ROOT>
+		<SCAN_INTERVAL>10</SCAN_INTERVAL>
+	</Pre_requisite>
+	<Pre_requisite name="MES">
+		<ENABLE_MES>true</ENABLE_MES>
+		<OPERATION_CODE>E-TST-0005</OPERATION_CODE>
+	</Pre_requisite>
+	<Pre_requisite name="UVC Setting" Default_BootCheck="EXPOSURE">
+		<setting Enabled="true" Auto="false" name="EXPOSURE">-5</setting>
+	</Pre_requisite>
+	<Testcase name="Serial Number Validation" serial_check="true" Width="500">
+		<ModuleBoard Enabled="true">
+			<ModuleBoard_custom_name>Base Board Sl. No.</ModuleBoard_custom_name>
+			<SerialNumberValidation>
+				<ComparisionText>SHCNDU</ComparisionText>
+				<TextStartIndex>3</TextStartIndex>
+				<SerialNumLength>15</SerialNumLength>
+			</SerialNumberValidation>
+		</ModuleBoard>
+		<baseboard Enabled="false">
+			<baseboard_custom_name>Camera interface baseboard SI.No</baseboard_custom_name>
+			<SerialNumberValidation>
+				<ComparisionText>SHCDR</ComparisionText>
+				<TextStartIndex>3</TextStartIndex>
+				<SerialNumLength>16</SerialNumLength>
+			</SerialNumberValidation>
+		</baseboard>
+		<ProductLabel1 Enabled="true">
+			<ProductLabel1_custom_name>Product Label Sl.No</ProductLabel1_custom_name>
+			<SerialNumberValidation>
+				<ComparisionText>SHCDR</ComparisionText>
+				<TextStartIndex>3</TextStartIndex>
+				<SerialNumLength>15</SerialNumLength>
+			</SerialNumberValidation>
+		</ProductLabel1>
+		<ProductLabel2 Enabled="false">
+			<ProductLabel2_custom_name>Product Label Sl.No</ProductLabel2_custom_name>
+			<SerialNumberValidation>
+				<ComparisionText>SHCDR</ComparisionText>
+				<TextStartIndex>3</TextStartIndex>
+				<SerialNumLength>15</SerialNumLength>
+			</SerialNumberValidation>
+		</ProductLabel2>
+	</Testcase>
+	<Testcase name="Enumeration" Auto="true" interval="500">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<Power_ON_LED Enabled="false">
+			<Power_ON_LED_led_discription>is the D1 LED glow in RED or Not ?</Power_ON_LED_led_discription>
+		</Power_ON_LED>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	<Testcase name="FPS Test">
+		<tolerance>2</tolerance>
+		<fps_duration>10</fps_duration>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<exposure_Access Enabled="false" Auto="false" name="EXPOSURE">-5</exposure_Access>
+	</Testcase>
+	<Testcase name="Blemish">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<UI_btn_click>pushbutton_blemish_full_screen</UI_btn_click>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	<Testcase name="Manual Focus Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<focus_test_tolerance>2</focus_test_tolerance>
+		<focus_test_step>10</focus_test_step>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+	</Testcase>
+	<Testcase name="Auto Focus Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<focus_test_tolerance>0.5</focus_test_tolerance>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<focus_test_step>10</focus_test_step>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+	<Testcase name="Streaming_LED">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<focus_test_tolerance>0.5</focus_test_tolerance>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<discription>is the D1 LED is glowing or not?</discription>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	<Testcase name="Preview still" Still_Auto="True">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<still_width>1920</still_width>
+		<still_height>1080</still_height>
+		<still_format>UYVY</still_format>
+		<still_FPS>30</still_FPS>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+	</Testcase>
+	<Testcase name="Sensor check" Custom_Name="Dead Pixel Manual Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	<Testcase name="Sensor check1" Custom_Name="Hot Pixel Manual Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+	<Testcase name="Type-C Orientation">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<Power_ON_LED Enabled="false">
+			<Power_ON_LED_led_discription>is the D1 LED glow in EDR or Not ?</Power_ON_LED_led_discription>
+		</Power_ON_LED>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+	<Testcase name="Preview Trigger FPS Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<tolerance>2</tolerance>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<FPS>30</FPS>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<trigger_fps_duration>10</trigger_fps_duration>
+	</Testcase>
+	<Testcase name="Preview External Trigger Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<FPS>30</FPS>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<trigger_fps_duration>10</trigger_fps_duration>
+		<tolerance>2</tolerance>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+	</Testcase>
+	<Testcase name="Preview Strobe Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	
+	<Testcase name="HID Auto Reboot Test" Custom_Name="Watchdog Test" Still_Auto="True" waitTime="15000" preview_enabled="true" Release_Cap="false">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<still_width>1920</still_width>
+		<still_height>1080</still_height>
+		<still_format>UYVY</still_format>
+		<still_FPS>30</still_FPS>
+	</Testcase>
+	<Testcase name="Preview soft trigger">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+		<HID_Soft Name="HID_Soft" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_Soft>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+	</Testcase>
+	<Testcase name="Color NON_Filter Test" Custom_Name="IR Cut Filter - ON">
+		<HID_IN AckID="6" AckVal="1" Name="HID_IN">
+			<Buffer>00,A3,01,00</Buffer>
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<Lower_pink_color>140,50,50</Lower_pink_color>
+		<Upper_pink_color>170,255,255</Upper_pink_color>
+		<threshold>0.1</threshold>
+		<operation>&lt;</operation>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<HID_OUT AckID="6" AckVal="1" Name="HID_OUT">
+			<Buffer>00,A3,01,00</Buffer>
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+	<Testcase name="Color Filter Test" Custom_Name="IR Cut Filter - OFF">
+		<HID_IN AckID="6" AckVal="1" Name="HID_IN">
+			<Buffer>00,A3,01,00</Buffer>
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<Lower_pink_color>140,50,50</Lower_pink_color>
+		<Upper_pink_color>170,255,255</Upper_pink_color>
+		<threshold>0.4</threshold>
+		<operation>&gt;</operation>
+		<width>1920</width>
+		<height>1080</height>
+		<format>UYVY</format>
+		<FPS>30</FPS>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1" name="HID_OUT">
+			<Buffer>00,A3,01,00</Buffer>
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+	<Testcase name="HID Auto Test">
+		<HID_IN Name="HID_IN" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_IN>
+		<exposure_Access Enabled="false" name="EXPOSURE" Auto="false">-5</exposure_Access>
+		<HID_Auto Name="HID_Auto" AckID="6" AckVal="1">
+			<Buffer>00,00</Buffer>
+		</HID_Auto>
+		<HID_OUT Name="HID_OUT" AckID="6" AckVal="1">
+			<buffer>00,00</buffer>
+		</HID_OUT>
+	</Testcase>
+</ApplicationConfig>

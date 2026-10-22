@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>XML Studio | e-con Systems</title>
+  <meta name="description" content="XML Studio by e-con Systems: edit XML configuration files in a simple form and export compatible key files.">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    /* Pick the theme before first paint so there is no light/dark flash:
+       saved choice first, otherwise follow the OS. */
+    (function () {
+      var t = 'light';
+      try {
+        var saved = localStorage.getItem('xmlstudio-theme');
+        t = saved === 'light' || saved === 'dark'
+          ? saved
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

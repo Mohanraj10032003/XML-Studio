@@ -1,0 +1,325 @@
+<header class="bar">
+  <button class="brand" type="button" (click)="closeFile()" aria-label="XML Studio home">
+    <span class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" />
+        <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none" />
+      </svg>
+    </span>
+    <span class="name">XML Studio</span>
+    <span class="by"><i aria-hidden="true"></i>by e-con Systems</span>
+  </button>
+
+  <div class="right">
+    <div class="file" *ngIf="authed && root">
+      <span class="modechip" *ngIf="modeLabel">{{ modeLabel }}</span>
+      <span class="fname">
+        <span class="dirty" [class.on]="dirty" aria-hidden="true"></span>
+        {{ fileName }}
+        <small>{{ fileSize }}</small>
+      </span>
+      <span class="status" aria-live="polite">{{ dirty ? 'Unsaved changes' : 'No changes' }}</span>
+      <button class="btn quiet" type="button" [disabled]="!dirty" (click)="reset()">Reset changes</button>
+      <button class="btn quiet" type="button" (click)="closeFile()">&larr; Home</button>
+    </div>
+    <div class="file" *ngIf="authed && !root && mode">
+      <button class="btn quiet" type="button" (click)="closeFile()">&larr; Back to home</button>
+    </div>
+
+    <div class="theme" role="group" aria-label="Theme">
+      <button type="button" [class.on]="theme === 'light'" [attr.aria-pressed]="theme === 'light'" (click)="setTheme('light')" title="Day mode" aria-label="Day mode">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+        </svg>
+      </button>
+      <button type="button" [class.on]="theme === 'dark'" [attr.aria-pressed]="theme === 'dark'" (click)="setTheme('dark')" title="Dark mode" aria-label="Dark mode">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="who" *ngIf="authed">
+      <span class="av" aria-hidden="true">{{ userInitial }}</span>
+      <span class="un">{{ userName }}</span>
+      <button class="btn quiet" type="button" (click)="signOut()">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═════════ Sign in ═════════ -->
+<main class="login" *ngIf="!authed">
+  <section class="l-art" aria-hidden="true">
+    <i class="vc tl"></i><i class="vc tr"></i><i class="vc bl"></i><i class="vc br"></i>
+    <h2>Pick.<br />Edit.<br /><em>Generate.</em></h2>
+    <ul class="l-points">
+      <li>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg>
+        Tick the test cases you need
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg>
+        Update an existing key for an ECN
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg>
+        Download a compatible key file
+      </li>
+    </ul>
+  </section>
+
+  <section class="l-card">
+    <span class="eyebrow"><i class="pulse" aria-hidden="true"></i>e-con Systems &middot; XML Studio</span>
+    <h1>Welcome back.</h1>
+    <p class="lede">Sign in to build and update DiagCAM keys.</p>
+
+    <form (submit)="$event.preventDefault(); signIn()" novalidate>
+      <div class="fld">
+        <label for="lu">Username</label>
+        <input id="lu" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" [value]="loginUser" (input)="loginUser = $any($event.target).value" />
+      </div>
+      <div class="fld">
+        <label for="lp">Password</label>
+        <div class="pw">
+          <input id="lp" [type]="loginReveal ? 'text' : 'password'" autocomplete="current-password" [value]="loginPass" (input)="loginPass = $any($event.target).value" />
+          <button type="button" class="reveal" (click)="loginReveal = !loginReveal">{{ loginReveal ? 'Hide' : 'Show' }}</button>
+        </div>
+      </div>
+      <p class="err" role="alert" *ngIf="loginError">{{ loginError }}</p>
+      <button class="signin" type="submit" [disabled]="loginBusy">{{ loginBusy ? 'Signing in…' : 'Sign in' }}</button>
+    </form>
+    <p class="l-note">Access is limited to e-con Systems team members.</p>
+  </section>
+</main>
+
+<!-- ═════════ Home: choose a path ═════════ -->
+<main class="home" *ngIf="authed && !root && !mode">
+  <span class="eyebrow"><i class="pulse" aria-hidden="true"></i>Signed in as {{ userName }}</span>
+  <h1>What would you like <span class="grad">to do?</span></h1>
+  <p class="lede">Choose a path. You can come back here any time.</p>
+
+  <div class="paths">
+    <button class="path hot" type="button" [disabled]="loadingTemplate" (click)="startNew()">
+      <span class="p-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4" /><path d="m10.8 12.2 8.2-8.2M16 7l3 3M14 9l2 2" /></svg>
+      </span>
+      <span class="p-tag">Start fresh</span>
+      <strong>DiagCAM New Key</strong>
+      <span class="p-desc">Start from the latest DiagCAM template. Tick the test cases you need, fill in the inputs, then generate a new key.</span>
+      <span class="p-go">
+        {{ loadingTemplate ? 'Loading template…' : 'Open template' }}
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+      </span>
+    </button>
+
+    <button class="path" type="button" (click)="startEcn()">
+      <span class="p-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" /></svg>
+      </span>
+      <span class="p-tag">Update existing</span>
+      <strong>ECN</strong>
+      <span class="p-desc">Upload a key you already have, edit its values and remove the test cases that are no longer needed.</span>
+      <span class="p-go">
+        Upload key
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+      </span>
+    </button>
+  </div>
+  <p class="err" role="alert" *ngIf="error">{{ error }}</p>
+</main>
+
+<!-- ═════════ ECN: upload an existing key ═════════ -->
+<main class="ecn" *ngIf="authed && !root && mode === 'ecn'">
+  <span class="eyebrow"><i class="pulse" aria-hidden="true"></i>ECN</span>
+  <h1>Upload the key <span class="grad">to update.</span></h1>
+  <p class="lede">Open a .key (or .xml) file. Edit any value, untick the test cases you want to remove, then generate the updated key.</p>
+
+  <label
+    class="finder"
+    [class.over]="dragOver"
+    (dragover)="onDragOver($event)"
+    (dragleave)="dragOver = false"
+    (drop)="onDrop($event)"
+  >
+    <input type="file" accept=".xml,.key,.enc,text/xml,text/plain" (change)="onPick($event)" />
+    <span class="corners" aria-hidden="true"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i></span>
+    <span class="glyph" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 16V5m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" />
+      </svg>
+    </span>
+    <strong>{{ dragOver ? 'Drop to open file' : 'Drop the key file here' }}</strong>
+    <span class="alt">or click to browse</span>
+    <span class="fine">.key and .xml files are supported. Nothing is uploaded anywhere.</span>
+  </label>
+  <p class="err" role="alert" *ngIf="error">{{ error }}</p>
+</main>
+
+<!-- ═════════ Editor ═════════ -->
+<main class="work" *ngIf="authed && root">
+  <nav class="rail" aria-label="Sections">
+    <label class="find">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+      </svg>
+      <input type="search" placeholder="Search sections" aria-label="Search sections" [value]="query" (input)="query = $any($event.target).value" />
+    </label>
+
+    <label class="offtoggle" *ngIf="hiddenCount">
+      <input type="checkbox" [checked]="showOff" (change)="showOff = $any($event.target).checked" />
+      <span class="track"><span class="thumb"></span></span>
+      <span>Show disabled items</span>
+      <em>{{ hiddenCount }}</em>
+    </label>
+
+    <div class="group" *ngFor="let g of groups; trackBy: trackGroup">
+      <h2>
+        {{ g.label }}
+        <span>{{ isTcGroup(g) ? includedIn(g) + '/' + g.items.length : g.items.length }}</span>
+        <span class="gtools" *ngIf="isTcGroup(g)">
+          <button type="button" (click)="includeGroup(g.items, true)">All</button>
+          <button type="button" (click)="includeGroup(g.items, false)">None</button>
+        </span>
+      </h2>
+
+      <ng-container *ngFor="let s of g.items; trackBy: trackNode">
+        <!-- test case: tick box + name -->
+        <div
+          *ngIf="isTc(s); else plain"
+          class="item tcrow"
+          [class.active]="s.id === current?.id"
+          [class.out]="!isIncluded(s)"
+          [class.off]="isOff(s)"
+        >
+          <label class="cb" [title]="isIncluded(s) ? 'In the key. Untick to remove.' : 'Not in the key. Tick to add.'">
+            <input type="checkbox" [checked]="isIncluded(s)" (change)="toggleInclude(s)" [attr.aria-label]="'Include ' + titleOf(s) + ' in the key'" />
+            <span class="tick"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>
+          </label>
+          <button type="button" class="nm" [attr.aria-current]="s.id === current?.id ? 'true' : null" (click)="select(s)">{{ titleOf(s) }}</button>
+        </div>
+
+        <ng-template #plain>
+          <button
+            type="button"
+            class="item"
+            [class.active]="s.id === current?.id"
+            [class.off]="isOff(s)"
+            [attr.aria-current]="s.id === current?.id ? 'true' : null"
+            (click)="select(s)"
+          >
+            <span class="mark" aria-hidden="true"></span>
+            <span class="t">{{ titleOf(s) }}</span>
+          </button>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <p class="none" *ngIf="!groups.length && query">“{{ query }}” has no matching sections.</p>
+  </nav>
+
+  <section class="canvas">
+    <div class="outbar" *ngIf="current && isTc(current) && !isIncluded(current)">
+      <span>This test case is <b>not in the key</b>.</span>
+      <button class="btn solid" type="button" (click)="toggleInclude(current)">Include it</button>
+    </div>
+
+    <div class="sheet">
+      <app-node-editor
+        *ngFor="let c of currentList; trackBy: trackNode"
+        [node]="c"
+        [depth]="0"
+        [hiddenSet]="hidden"
+        [showOff]="showOff"
+      ></app-node-editor>
+
+      <div class="blank" *ngIf="!current">
+        <strong>No enabled items</strong>
+        <span>All items are disabled. Turn on “Show disabled items” on the left to view them.</span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="lock">
+    <div class="seal">
+      <h2>Generate key</h2>
+      <p class="hint">Tick the test cases you need on the left and check the inputs. We will ask you to confirm before the key is created.</p>
+
+      <div class="chosen" *ngIf="totalTc">
+        <div><b>{{ selectedTestcases.length }}</b><span>of {{ totalTc }} test cases in the key</span></div>
+        <span class="chosen-tools">
+          <button type="button" (click)="includeAll(true)">All</button>
+          <button type="button" (click)="includeAll(false)">None</button>
+        </span>
+      </div>
+
+      <button class="go" type="button" [disabled]="busy" (click)="requestKey()">
+        {{ busy ? 'Preparing key file…' : 'Generate Key File (.key)' }}
+      </button>
+      <!-- <button class="plain" type="button" (click)="downloadPlain()">Download XML (.xml)</button> -->
+
+      <p class="spec">The key file uses the internal application’s compatible byte-pair format.</p>
+      <p class="err" role="alert" *ngIf="error">{{ error }}</p>
+    </div>
+
+    <div class="peek">
+      <button type="button" (click)="showPreview = true" aria-haspopup="dialog">
+        <span>View plain XML</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
+      </button>
+    </div>
+  </aside>
+</main>
+
+<footer class="foot">
+  <span class="foot-brand"><i aria-hidden="true"></i>e-con Systems</span>
+  <span class="foot-copy">&copy; 2026 e-con Systems. All rights reserved.</span>
+</footer>
+
+<!-- confirm before generating -->
+<div class="xml-modal-backdrop" *ngIf="showConfirm" (click)="showConfirm = false">
+  <section class="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlg-title" (click)="$event.stopPropagation()">
+    <span class="dlg-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4" /><path d="m10.8 12.2 8.2-8.2M16 7l3 3M14 9l2 2" /></svg>
+    </span>
+    <h2 id="dlg-title">Generate the key with these test cases?</h2>
+    <p *ngIf="totalTc">You selected <b>{{ selectedTestcases.length }}</b> of {{ totalTc }} test cases. Please confirm this is what you want in the key.</p>
+    <p *ngIf="!totalTc">This file has no test cases. The key will contain the current values.</p>
+
+    <ol class="dlg-list" *ngIf="selectedTestcases.length">
+      <li *ngFor="let t of selectedTestcases; let i = index"><span class="no">{{ i + 1 }}</span>{{ titleOf(t) }}</li>
+    </ol>
+
+    <div class="dlg-removed" *ngIf="mode === 'ecn' && removedTestcases.length">
+      <span>Removed from this key ({{ removedTestcases.length }})</span>
+      <s *ngFor="let t of removedTestcases">{{ titleOf(t) }}</s>
+    </div>
+
+    <p class="dlg-note">Pre-requisite settings are always included.</p>
+    <div class="dlg-actions">
+      <button class="btn" type="button" (click)="showConfirm = false">Back to editing</button>
+      <button id="dlg-ok" class="btn solid" type="button" [disabled]="busy" (click)="confirmGenerate()">Yes, generate key</button>
+    </div>
+  </section>
+</div>
+
+<div class="xml-modal-backdrop" *ngIf="showPreview" (click)="showPreview = false">
+  <section class="xml-modal" role="dialog" aria-modal="true" aria-labelledby="xml-preview-title" (click)="$event.stopPropagation()">
+    <header class="xml-modal-header">
+      <div>
+        <h2 id="xml-preview-title">Plain XML preview</h2>
+        <p>The current XML output, including your latest edits.</p>
+      </div>
+      <button class="xml-modal-close" type="button" aria-label="Close XML preview" (click)="showPreview = false">×</button>
+    </header>
+    <pre class="xml-modal-content">{{ preview }}</pre>
+    <footer class="xml-modal-footer">
+      <span>Read-only preview</span>
+      <button class="btn solid" type="button" (click)="showPreview = false">Close preview</button>
+    </footer>
+  </section>
+</div>
+
+<div class="toast" role="status" *ngIf="toast">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>
+  {{ toast }}
+</div>

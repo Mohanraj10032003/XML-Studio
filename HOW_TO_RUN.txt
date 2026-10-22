@@ -1,0 +1,43 @@
+XML Studio - Angular 16
+======================
+
+Requirement: Node.js 18 or 20 (https://nodejs.org)
+
+Run on Windows
+  1. Extract the ZIP file.
+  2. Double-click run.bat (or run run.bat from Command Prompt).
+  3. Open http://localhost:4200 in your browser. The first run installs dependencies and requires an internet connection.
+
+Manual setup from Command Prompt
+  cd xml-studio
+  npm install
+  npx ng serve --open
+
+Production build
+  npx ng build  ->  dist/xml-studio/ (can be hosted on any static web server)
+
+Workflow
+  1. Open config.xml. Enabled values appear in the form.
+  2. Edit the values and enter or generate an encryption key.
+  3. Select “Encrypt and download .key” to download the encrypted configuration.
+  4. To reopen a config.key file, open it and enter the same key.
+  5. Select “Download plain XML” to download config.xml using the original file name.
+  6. Disabled, off, and false items remain in the XML even when hidden from the form. Turn on “Show disabled items” to view them.
+  7. Select “View plain XML” to open a large preview window showing the current XML output and latest edits.
+
+Note: Encryption uses the Web Crypto API, so it works on localhost or HTTPS only.
+.key file format: EXMLv1:<base64( salt16 | iv12 | ciphertext+tag )> (AES-256-GCM, PBKDF2-SHA256 200k)
+Files created with the older .enc format are also supported.
+
+Sign in
+  Default user:  admin  /  EconXML@2026     (change it before sharing the app)
+  Users are in src/assets/auth.json (salted hashes, no plain passwords).
+  Add / change a user:   npm run user -- <username> <password>
+  then paste the printed JSON entry into the "users" list of src/assets/auth.json (replace the old entry for that username).
+  NOTE: this is a frontend-only app, so the login is a UI-level gate, not server security.
+
+Paths after sign in
+  DiagCAM New Key : loads src/assets/diagcam-template.xml. Tick the test cases on the left, fill inputs, Generate Key File (a confirmation lists the selected test cases first).
+  ECN             : upload an existing .key / .xml, edit values, untick test cases to remove them, Generate Key File.
+  Replace src/assets/diagcam-template.xml to change the template (no code change needed).
+  Output file name comes from TEMPLATE_FILE in src/app/app.component.ts (currently ApplicationConfig).
